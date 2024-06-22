@@ -1,54 +1,62 @@
-const board = document.getElementById('board');
-const cells = document.querySelectorAll('.cell');
-const message = document.getElementById('message');
-const restartButton = document.getElementById('restart');
-
-let currentPlayer = 'X';
-let gameState = Array(9).fill(null);
-
-const winningConditions = [
-    [0, 1, 2], [0, 3, 6], [0, 4, 8],
-    [1, 4, 7], [2, 5, 8], [2, 4, 6],
-    [3, 4, 5], [6, 7, 8]
-];
-
-function handleCellClick(event) {
-    const cell = event.target;
-    const index = cell.getAttribute('data-index');
-
-    if (gameState[index] || checkWinner()) {
-        return;
-    }
-
-    gameState[index] = currentPlayer;
-    cell.textContent = currentPlayer;
-
-    if (checkWinner()) {
-        message.textContent = `Player ${currentPlayer} wins!`;
-    } else if (gameState.every(cell => cell)) {
-        message.textContent = `It's a tie!`;
-    } else {
-        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-    }
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
 }
 
-function checkWinner() {
-    return winningConditions.some(condition => {
-        return condition.every(index => gameState[index] === currentPlayer);
-    });
+.container {
+    text-align: center;
 }
 
-function restartGame() {
-    currentPlayer = 'X';
-    gameState = Array(9).fill(null);
-    cells.forEach(cell => {
-        cell.textContent = '';
-    });
-    message.textContent = '';
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    gap: 5px;
+    margin: 20px auto;
 }
 
-cells.forEach(cell => {
-    cell.addEventListener('click', handleCellClick);
-});
+.cell {
+    width: 100px;
+    height: 100px;
+    background-color: #fff;
+    border: 2px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
 
-restartButton.addEventListener('click', restartGame);
+.cell:hover {
+    background-color: #f0f0f0;
+}
+
+#message {
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+.hidden {
+    opacity: 0;
+}
+
+.visible {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+.hidden-message {
+    display: none;
+}
+
+.visible-message {
+    display: block;
+}
+
